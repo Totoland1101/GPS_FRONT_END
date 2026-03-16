@@ -1,7 +1,16 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Modal, Select, Row, Col, Typography, Input, Form } from "antd";
+import {
+  Modal,
+  Select,
+  Row,
+  Col,
+  Typography,
+  Input,
+  Form,
+  notification,
+} from "antd";
 import { Map, Marker, useMap, useMapsLibrary } from "@vis.gl/react-google-maps";
 import PlaceService from "../../core/services/placeService";
 
@@ -128,31 +137,49 @@ export default function CreateSavedPlace({ open, onClose = () => {} }) {
   };
 
   const handleOk = async () => {
-    const values = await form.validateFields();
+    try {
+      const values = await form.validateFields();
 
-    const payload = {
-      route_name: values.route_name,
-      description: values.description,
-      geo_location: [
-        {
-          place: fromName,
-          lat: from?.lat,
-          lng: from?.lng,
-        },
-        {
-          place: toName,
-          lat: to?.lat,
-          lng: to?.lng,
-        },
-      ],
-    };
+      const payload = {
+        routeName: values.route_name,
+        description: values.description,
+        geoLocation: [
+          {
+            place: fromName,
+            lat: from?.lat,
+            lng: from?.lng,
+          },
+          {
+            place: toName,
+            lat: to?.lat,
+            lng: to?.lng,
+          },
+        ],
+      };
 
-    console.log("payload:", payload);
+      await PlaceService.createPlace(payload);
 
-    await PlaceService.createPlace(payload);
+      notification.success({
+        message: "Route Saved",
+        description: "Your route has been saved successfully.",
+        placement: "topRight",
+      });
 
-    form.resetFields();
-    onClose(payload);
+      form.resetFields();
+      setFrom(null);
+      setTo(null);
+      setFromName("");
+      setToName("");
+      setInfo(null);
+
+      onClose(payload);
+    } catch (error) {
+      notification.error({
+        message: "Error",
+        description: "Failed to save route.",
+        placement: "topRight",
+      });
+    }
   };
 
   return (
@@ -232,7 +259,6 @@ export default function CreateSavedPlace({ open, onClose = () => {} }) {
           >
             {from && <Marker position={from} />}
             {to && <Marker position={to} />}
-
             <RouteDirections from={from} to={to} setInfo={setInfo} />
           </Map>
         </div>

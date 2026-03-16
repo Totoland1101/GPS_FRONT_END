@@ -3,10 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useMap, useMapsLibrary } from "@vis.gl/react-google-maps";
 import { Button } from "antd";
+import usePlaces from "../core/hooks/usePlace";
 
 export default function RouteLine({ from, to }) {
   const map = useMap();
   const routesLibrary = useMapsLibrary("routes");
+  const { onUpdatedMap } = usePlaces() ?? {};
 
   const rendererRef = useRef(null);
   const [info, setInfo] = useState(null);
@@ -67,6 +69,7 @@ export default function RouteLine({ from, to }) {
   const clearRoute = () => {
     rendererRef.current?.setDirections({ routes: [] });
     setInfo(null);
+    onUpdatedMap({ routeList: [] });
   };
 
   if (!info) return null;

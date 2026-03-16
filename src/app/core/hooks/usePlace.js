@@ -21,32 +21,20 @@ const usePlaces = () => {
     });
   };
 
-  const getSavedPlaceList = async ({ page, pageSize, search } = {}) => {
+  const getSavedPlaceList = async () => {
     try {
       onChangeState({ loading: true });
-
-      const { success, data } = await PlaceService.getSavedPlace({
-        page,
-        pageSize,
-        search,
-      });
-
+      const { success, data } = await PlaceService.getSavedPlace();
       if (success) {
         onChangeState({
           placeList: data?.result ?? [],
           loading: false,
         });
       } else {
-        onChangeState({
-          placeList: [],
-          loading: false,
-        });
+        onChangeState({ placeList: [], loading: false });
       }
     } catch (error) {
-      onChangeState({
-        placeList: [],
-        loading: false,
-      });
+      onChangeState({ placeList: [], loading: false });
     }
   };
 

@@ -16,7 +16,15 @@ const PlaceService = {
   },
   createPlace: async (body) => {
     try {
-      const response = await HttpService.post("/place", body);
+      const response = await HttpService.post("/place/create/saved", body);
+      return HttpResponse.success(response);
+    } catch (error) {
+      return HttpResponse.error(error);
+    }
+  },
+  deletesSavedPlace: async (id) => {
+    try {
+      const response = await HttpService.delete(`/place/${id}`);
       return HttpResponse.success(response);
     } catch (error) {
       return HttpResponse.error(error);
