@@ -1,0 +1,15 @@
+export const floatingButtonStyle = Object.freeze({
+  position: "absolute",
+  bottom: 80,
+  right: 15,
+  width: 55,
+  height: 55,
+  borderRadius: "50%",
+  fontSize: 20,
+  background: "#1976d2",
+  color: "#fff",
+  border: "none",
+  cursor: "pointer",
+  boxShadow: "0 4px 10px rgba(0,0,0,0.3)",
+  zIndex: 1000,
+});
